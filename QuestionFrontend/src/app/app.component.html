@@ -1,0 +1,54 @@
+<div>
+    <div class="Submit"  >
+       
+        <button class="submitbutton" [style.background-color]="(selectedTemplate.templateid==1 || Count>=5)?'grey':'blue'" [disabled]=" selectedTemplate.templateid==1 || Count>=5"  (click)="ShowQuestionWindow()">Add Question</button>
+    </div>
+    <div class="sidenav"  style="transform: none; visibility: visible; ">
+        <div  *ngFor = "let template of templates">
+            <div [ngClass]="(selectedTemplate.templateid==template.templateid)?'menuitem menuitemclicked':'menuitem'" type="button" (click)=ActivateTemplate(template) title={{template.templatename}}>{{(template.templatename .length>10)? (template.templatename  | slice:0:10)+'..':(template.templatename )}}</div>
+            <img style="margin-right: 10px;float:right; margin-top:-40px " (click)="CloneTemplate(template)" src='/assets/clone.png'>
+        </div>
+    </div>
+    <div class="maindiv">
+        <div *ngFor = "let map of mappings">
+           
+            <div *ngIf = "map.templateid==selectedTemplate.templateid">
+                
+                <div *ngFor = "let question of questions">
+    
+                    <div class="question" *ngIf = "map.questionid==question.questionId">
+                           <div style="width: 27vw; height:5vh"> <span >{{question.questions}}</span></div>
+                         <div style="margin-left:10vw;width: 10vw;height: 6vh;" > 
+                        <span>
+                            {{map.type}}
+                        </span>
+                    </div>
+                    <div *ngIf="map.templateid!=1" class="button-right">
+                        <img  (click)=DeleteQuestions(map) class="cancel_image" src='/assets/remove.png'>
+                        <img (click)=EditQuestionWindow(map,question) class="submit_image" src='/assets/edit.svg'>
+                    </div>         
+                </div>    
+            </div>
+    
+        </div>
+
+    </div>
+
+    <div *ngIf =newQuestionVisible class ="question" style="margin-top:25px;margin-right: 20px;">
+        <form [formGroup]="questionform" (ngSubmit)="addQuestion(Editflag)" novalidate>
+             <input type="text" formControlName="newQuestion" maxlength="1000" [(ngModel)]="questionplaceholder" placeholder="Please Enter the question" style="width: 27vw; height: 25px;" required>
+                <select class="form-control" style="margin-left:10vw;width: 10vw;height: 25px;" formControlName="newtype"   required>
+                  <option value="" >Please select a type</option>
+                  <option *ngFor="let type of types"
+                          [value]="type">
+                          {{type}}
+                  </option>
+                </select>
+    <div class="button-right">
+        <img (click)="ShowQuestionWindow()" class="cancel_image" src='/assets/cancel.png'>
+        <img type= "Submit" (click)="addQuestion(Editflag)" class="submit_image" src='/assets/submit.png'>
+    </div>
+    </form> 
+</div>
+
+</div>
